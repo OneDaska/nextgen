@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const html=fs.readFileSync('public/nextgen.html','utf8');
+const html=fs.readFileSync('public/nextgen-app.js','utf8');
 const context=vm.createContext({console,localStorage:{getItem:()=>null},Date});
 vm.runInContext(html.slice(html.indexOf('const FN='),html.indexOf('function heroArt')),context);
 const run=s=>vm.runInContext(s,context);
