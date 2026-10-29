@@ -22,3 +22,7 @@ All nine functions have five official KPIs. Assigned contributors read all activ
 The Supabase Edge Function needs EVIDENCE_SCANNER_URL and EVIDENCE_SCANNER_TOKEN, configured as server secrets. The scanner must accept an authenticated HTTPS POST of raw bytes with X-Content-SHA256, scan using an up-to-date malware engine, and return JSON with matching sha256 and status clean or infected. Never configure an endpoint that merely echoes a clean result. A missing, failing or mismatched scanner keeps the file quarantined. Pending files can be rescanned through their authenticated download endpoint once the scanner is configured. No third-party scanning subscription is assumed or purchased by this application.
 
 Run pnpm test and pnpm build before publishing. Edge source is under supabase/functions/nextgen-evidence; deploy it separately with its internal user authentication enabled. No service-role key belongs in the repository or browser.
+
+## Monthly scoring
+
+Each function has five equally weighted KPIs, each contributing up to 20 percentage points. The team score averages all nine functions. Unreported and unconfigured KPIs contribute zero to monthly totals; individual entries keep Not reported or Scoring setup required labels. Reporting completion is displayed separately. Scores display up to one decimal place. Existing records are recalculated at display time without rewriting saved actuals or targets.
