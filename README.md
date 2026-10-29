@@ -14,8 +14,8 @@ Production domain: nextgen.laineworkflow.online
 - Start: pnpm start
 
 Database changes are managed separately. Do not rerun migrations during deployment.
-Keep evidence upload staging variables unset; evidence uploads are disabled for this release.
+Evidence supports PNG, PDF, DOC, DOCX and XLSX up to 1,000,000 bytes per file, plus HTTP(S) document links. Attachments are private to the assigned function and administrator, stored in Supabase with row-level access controls. Uploads use the signed-in user token; no service key is required.
 
 Configure Supabase authentication to allow https://nextgen.laineworkflow.online/nextgen.html for invitation and recovery redirects, and set the production site URL once the deployment is verified.
 
-Real-account sign-in and invitation/reset delivery still require verification. KPI definitions require owner validation. Temporary-password generation and enforced first-login password changes are not implemented in this release.
+Real-account sign-in and invitation/reset delivery still require verification. All nine functions have five official KPIs from the supplied cards; agreed targets and technology milestone scoring still require administrator configuration. Temporary-password generation and enforced first-login password changes are not implemented in this release.
