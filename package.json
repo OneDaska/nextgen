@@ -5,7 +5,7 @@
   "packageManager": "pnpm@12.3.4",
   "scripts": {
     "dev": "next dev",
-    "build": "node tests/launch-interactions.cjs && next build",
+    "build": "node tests/launch-interactions.cjs && next build --webpack",
     "start": "next start",
     "test": "node tests/operations-kpis.cjs && node tests/evidence-validation.cjs && node tests/launch-interactions.cjs"
   },
@@ -35,3 +35,4 @@
     "typescript": "5.7.3"
   }
 }
+
