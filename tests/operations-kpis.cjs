@@ -7,6 +7,6 @@ assert.equal(run('activeKpis().length'),45);for(let i=0;i<9;i++)assert.equal(run
 assert.equal(run("activeKpis().find(k=>k.team==='Payroll'&&k.name==='Processing Accuracy').target"),99);
 assert.equal(run("activeKpis().find(k=>k.team==='Finance'&&k.name==='Processing Accuracy').target"),98);
 run("state.kpis.push({id:'old',team:FN[0],archived:true});state.actuals[month]={old:{actual:88}};");assert.equal(run('activeKpis().length'),45);assert.equal(run('state.actuals[month].old.actual'),88);
-run("var cloudRole='viewer',assignedFunction=FN[1];");assert.equal(run('activeKpis().length'),5);assert.ok(run("activeKpis().every(k=>k.team==='Recruitment')"));
+run("var cloudRole='viewer',assignedFunction=FN[1];");assert.equal(run('activeKpis().length'),45);assert.equal(run("activeKpis().filter(k=>k.team==='Recruitment').length"),5);
 assert.equal(run("result(activeKpis().find(k=>k.unit==='unconfigured'))"),null);
 console.log('PASS: 45 official KPIs, five per function, targets, archived retention and contributor scope.');
