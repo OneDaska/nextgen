@@ -1,0 +1,33 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {parseHTML}=require('linkedom');
+const html=fs.readFileSync('public/nextgen.html','utf8');
+const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(s=>s.trim());
+for(const s of scripts)new vm.Script(s);
+function harness(hash=''){
+ const {document}=parseHTML(html);const store=new Map(),messages=[];
+ const context=vm.createContext({console,document,Date,URL,URLSearchParams,JSON,Number,Intl,Blob,MutationObserver:class{observe(){}},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},setTimeout:()=>0,clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{},requestAnimationFrame:()=>0,alert:()=>{},confirm:()=>false,prompt:()=>null,location:{hash,origin:'https://nextgen-dashboard-murex.vercel.app',pathname:'/nextgen.html',search:'',replace:()=>{}},history:{replaceState:()=>{}},fetch:async()=>{throw Error('Unexpected network request')}});
+ context.window=context;context.window.matchMedia=()=>({matches:false,addEventListener(){}});
+ vm.runInContext(scripts.join('\n'),context);
+ vm.runInContext('toast=(message)=>testMessages.push(message)',Object.assign(context,{testMessages:messages}));
+ return {context,document,messages,run:s=>vm.runInContext(s,context)};
+}
+(async()=>{
+ const h=harness();const {run,document,messages,context}=h;
+ const kpi={id:'payroll-test',name:'Payroll accuracy',team:'Payroll',description:'Verified entries',unit:'percent',target:99,direction:'higher',weight:1};
+ context.testScope={role:'contributor',function:'Payroll',version:7,state:{kpis:[kpi],actuals:{},notes:{}}};context.calls=[];
+ run("cloudSession={user:{id:'test'},access_token:'test'};cloudCall=async(path,method,body)=>{calls.push({path,method,body});if(path.includes('nextgen_launch_scope'))return testScope;if(path.includes('nextgen_monthly_reports'))return [];throw Error('Unexpected call '+path)}");
+ await run('cloudLoad()');assert.equal(run('cloudRole'),'viewer');assert.equal(run('activeKpis().length'),1);assert.equal(run('chosenTeam'),'Payroll');assert.ok(!document.getElementById('screen').textContent.includes('Action Tracker Discipline'));
+ run("view='settings';render()");assert.equal(run('view'),'updates');assert.equal(document.querySelector('[data-view="settings"]').style.display,'none');
+ run("openUpdate('payroll-test')");assert.equal(document.getElementById('fTarget').hasAttribute('readonly'),true);document.getElementById('fActual').value='96';document.getElementById('fNote').value='Verified';
+ context.releaseSave=null;run("cloudCall=async()=>new Promise(resolve=>releaseSave=resolve)");
+ const saving=document.getElementById('saveModal').onclick();assert.equal(run("state.actuals[month]?.['payroll-test']"),undefined);assert.ok(!messages.includes('KPI saved securely'));
+ run('releaseSave(8)');await saving;assert.equal(run("state.actuals[month]['payroll-test'].actual"),96);assert.equal(run('cloudVersion'),8);assert.ok(messages.includes('KPI saved securely'));
+ run("openUpdate('payroll-test');cloudCall=async()=>{throw Error('Conflict: refresh required')}");document.getElementById('fActual').value='97';await document.getElementById('saveModal').onclick();assert.equal(run("state.actuals[month]['payroll-test'].actual"),96);assert.ok(document.getElementById('modalBack').classList.contains('show'));assert.ok(messages.at(-1).startsWith('KPI not saved:'));
+ run("closeModal();view='reports';render();cloudCall=async(path,method,body)=>{calls.push({path,method,body});return []}");document.getElementById('summaryNote').value='Monthly payroll report';await document.getElementById('saveFunctionReport').onclick();assert.ok(context.calls.some(c=>c.method==='POST'&&c.body.function_name==='Payroll'&&c.body.summary==='Monthly payroll report'));
+ run("cloudCall=async(path)=>path.includes('nextgen_launch_scope')?{...testScope,version:8,state:{...testScope.state,actuals:state.actuals}}:[{summary:'Monthly payroll report',risks:'',actions:''}]");await run('cloudLoad()');assert.equal(document.getElementById('summaryNote').value,'Monthly payroll report');
+ run("lockLogin('Signed out')");assert.equal(document.getElementById('screen').textContent,'');assert.equal(run('state.kpis.length'),0);assert.equal(run('cloudSession'),null);
+ // The recovery form validates confirmation locally, then updates the authenticated user's password.
+ const r=harness();r.run("cloudSession={access_token:'test'};showPasswordSetup();cloudCall=async(path,method,body)=>{passwordRequest={path,method,body};return {}};");r.context.passwordRequest=null;r.document.getElementById('newPassword').value='long-test-password';r.document.getElementById('confirmPassword').value='different-password';await r.document.getElementById('loginForm').onsubmit({preventDefault(){}});assert.equal(r.context.passwordRequest,null);
+ r.document.getElementById('confirmPassword').value='long-test-password';await r.document.getElementById('loginForm').onsubmit({preventDefault(){}});assert.equal(r.context.passwordRequest.path,'/auth/v1/user');assert.equal(r.context.passwordRequest.method,'PUT');assert.equal(r.document.getElementById('newPassword').value,'');
+ console.log('PASS: full script parses and initializes; contributor scope; forbidden navigation; locked target; save acknowledgement timing; failed-save retention; report save/reload; sign-out clearing; password confirmation and authenticated update.');
+})().catch(e=>{console.error(e);process.exit(1)});

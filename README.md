@@ -1,11 +1,21 @@
 # NextGen Dashboard
 
-Leadership performance dashboard deployed to nextgen.laineworkflow.online.
+Production domain: nextgen.laineworkflow.online
 
-## Hostinger deployment
+## Hostinger deployment settings
 
-Import this repository as a Node.js / Next.js application using the main branch and repository root.
-Use Node.js 24 where available. Install with `pnpm install --frozen-lockfile`, build with `pnpm build`, and start with `pnpm start`.
+- Repository: OneDaska/nextgen
+- Branch: main
+- Application root: repository root
+- Framework: Next.js
+- Node.js: 24 where available (22 is also supported by Next.js)
+- Install: pnpm install --frozen-lockfile
+- Build: pnpm build
+- Start: pnpm start
 
-Database migrations are managed separately and must not run during deployment.
-Evidence uploads remain disabled. Supabase authentication redirect URLs must allow the production domain before invitation and reset links are used.
+Database changes are managed separately. Do not rerun migrations during deployment.
+Keep evidence upload staging variables unset; evidence uploads are disabled for this release.
+
+Configure Supabase authentication to allow https://nextgen.laineworkflow.online/nextgen.html for invitation and recovery redirects, and set the production site URL once the deployment is verified.
+
+Real-account sign-in and invitation/reset delivery still require verification. KPI definitions require owner validation. Temporary-password generation and enforced first-login password changes are not implemented in this release.
