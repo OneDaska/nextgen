@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {parseHTML}=require('linkedom');
-const html=fs.readFileSync('public/nextgen.html','utf8');
+const {dashboardHtml:html}=require('../lib/dashboard-document.mjs');
 const scripts=[fs.readFileSync('public/nextgen-app.js','utf8')];
 for(const s of scripts)new vm.Script(s);
 function harness(hash=''){
