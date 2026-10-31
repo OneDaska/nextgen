@@ -26,3 +26,7 @@ Run pnpm test and pnpm build before publishing. Edge source is under supabase/fu
 ## Monthly scoring
 
 Each function has five equally weighted KPIs, each contributing up to 20 percentage points. The team score averages all nine functions. Unreported and unconfigured KPIs contribute zero to monthly totals; individual entries keep Not reported or Scoring setup required labels. Reporting completion is displayed separately. Scores display up to one decimal place. Existing records are recalculated at display time without rewriting saved actuals or targets.
+
+## Approved 48-hour setup invitations
+
+Janet and Lawrencia can use individually issued, high-entropy, one-use setup invitations valid for exactly 48 hours from issuance. Only SHA-256 invitation digests are stored in a private, RLS-protected table. A service-only database function atomically checks expiry, use status, the pending-password flag and approved contributor identity before issuing a normal short-lived Auth recovery session. Tokens are consumed only after the member presses Continue, protecting against link previews. Normal Auth email expiry is unchanged. Page JavaScript receives user details only; tokens stay in Secure HttpOnly cookies. After setup the member signs in normally with email and password.
