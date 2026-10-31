@@ -4,7 +4,7 @@ Production: https://nextgen.laineworkflow.online/nextgen.html
 
 Hostinger deploys OneDaska/nextgen main. Use Node 24, pnpm install --frozen-lockfile, pnpm build and pnpm start. Next.js builds with Webpack for Hostinger compatibility. SQL and database migrations are managed separately and must not run during deployment.
 
-All nine functions have five official KPIs. Assigned contributors read all active team results and reports, and edit only their own function. Agreed technology milestones and prospect targets still require administrator scoring setup.
+All nine functions have five official KPIs. Assigned contributors read all active team results and reports, and edit only their own function. Agreed technology milestones still require administrator scoring setup. Prince’s Prospect Engagement KPI measures the percentage of his agreed monthly qualified prospect engagement target achieved, with a 90% threshold for full KPI credit.
 
 ## Security
 

@@ -9,4 +9,6 @@ assert.equal(run("activeKpis().find(k=>k.team==='Finance'&&k.name==='Processing 
 run("state.kpis.push({id:'old',team:FN[0],archived:true});state.actuals[month]={old:{actual:88}};");assert.equal(run('activeKpis().length'),45);assert.equal(run('state.actuals[month].old.actual'),88);
 run("var cloudRole='viewer',assignedFunction=FN[1];");assert.equal(run('activeKpis().length'),45);assert.equal(run("activeKpis().filter(k=>k.team==='Recruitment').length"),5);
 assert.equal(run("result(activeKpis().find(k=>k.unit==='unconfigured'))"),null);
+const prospect=run("activeKpis().find(k=>k.team==='Business Development'&&k.name==='Prospect Engagement')");assert.equal(prospect.unit,'percent');assert.equal(prospect.target,90);assert.equal(prospect.description,'≥90% achievement of agreed monthly qualified prospect engagement target.');
+run("var prospectKpi=activeKpis().find(k=>k.id==='official-2026-2-0');state.actuals[month][prospectKpi.id]={actual:45};");assert.equal(run('result(prospectKpi)'),50);run('state.actuals[month][prospectKpi.id].actual=90');assert.equal(run('result(prospectKpi)'),100);assert.equal(run("statTeam('Business Development').score"),20);run('state.actuals[month][prospectKpi.id].actual=100');assert.equal(run('result(prospectKpi)'),100);
 console.log('PASS: 45 official KPIs, five per function, targets, archived retention and contributor scope.');
