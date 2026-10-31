@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "node tests/launch-interactions.cjs && next build --webpack",
     "start": "next start",
-    "test": "node tests/operations-kpis.cjs && node tests/evidence-validation.cjs && node tests/launch-interactions.cjs && node tests/evidence-api.cjs && node tests/session-security.cjs && node tests/recovery-security.cjs && node tests/monthly-scoring.cjs && node tests/setup-invitations.cjs"
+    "test": "node tests/operations-kpis.cjs && node tests/evidence-validation.cjs && node tests/launch-interactions.cjs && node tests/evidence-api.cjs && node tests/session-security.cjs && node tests/recovery-security.cjs && node tests/monthly-scoring.cjs && node tests/setup-invitations.cjs && node tests/login-forwarding.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

@@ -159,7 +159,7 @@ function lockLogin(message=''){
  document.getElementById('loginMessage').textContent=message;
 }
 function signInMessage(e){
- if(/invalid login credentials/i.test(e.message))return 'Your email or password is incorrect. Please try again.';
+ if(/invalid login credentials/i.test(e.message))return 'Your email or password is incorrect. Check your latest personal password using Show password. If needed, ask the administrator for a private reset link.';
  if(/email not confirmed/i.test(e.message))return 'Please confirm your email using the link in your inbox before signing in.';
  if(/not yet been granted|membership|workspace not available/i.test(e.message))return 'Your account does not have NextGen access yet. Please contact the dashboard administrator.';
  if(/fetch|network/i.test(e.message))return 'Unable to connect. Check your internet connection and try again.';
@@ -176,6 +176,11 @@ document.getElementById('loginForm').onsubmit=async e=>{
  }catch(error){lockLogin(signInMessage(error));}
  finally{button.disabled=false;button.textContent='Sign in';}
 };
+const passwordToggle=document.getElementById('toggleLoginPassword');
+passwordToggle.onclick=()=>{const field=document.getElementById('loginPassword'),show=field.type==='password';field.type=show?'text':'password';passwordToggle.textContent=show?'Hide password':'Show password';passwordToggle.setAttribute('aria-pressed',String(show));};
+const loginPasswordField=document.getElementById('loginPassword');
+function showPasswordHint(event){const field=event.target,hints=[];if(event.getModifierState?.('CapsLock'))hints.push('Caps Lock is on.');if(field.value!==field.value.trim())hints.push('Your password includes spaces at the beginning or end. Check that these are intentional.');document.getElementById('loginPasswordHint').textContent=hints.join(' ');}
+loginPasswordField.addEventListener('keyup',showPasswordHint);loginPasswordField.addEventListener('input',showPasswordHint);
 function openOnlinePanel(){
  showModal('Your account',`<p>You are signed in as <strong>${esc(cloudSession?.user?.email||'')}</strong>.</p><p class="small">${cloudRole==='admin'?'Administrator · Edit KPI results and reports.':'Assigned contributor · Update your function’s KPI results and monthly report.'}</p><div class="actions"><button class="btn" id="refreshWorkspace">Refresh dashboard</button><button class="btn danger" id="signOutAccount">Sign out</button></div><p id="accountMessage" class="small" role="status"></p>`,closeModal);
  document.getElementById('refreshWorkspace').onclick=async()=>{try{await cloudLoad();closeModal();toast('Dashboard refreshed');}catch(e){document.getElementById('accountMessage').textContent=signInMessage(e);}};
