@@ -1,0 +1,17 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync('public/nextgen-app.js','utf8');
+const ctx=vm.createContext({console,Date,localStorage:{getItem:()=>null}});
+vm.runInContext(source.slice(source.indexOf('const FN='),source.indexOf('function heroArt')),ctx);
+vm.runInContext('let functionReports=[];',ctx);
+vm.runInContext(source.slice(source.indexOf('function consolidatedDraft()'),source.indexOf('function teamReportSummary()')),ctx);
+const run=s=>vm.runInContext(s,ctx);
+assert.match(run('consolidatedDraft().summary'),/0\/9/);
+run("functionReports=[{function_name:'Finance',summary:'Closed accounts',risks:'Late payment <script>',actions:'Follow up debtors'},{function_name:'Payroll',summary:'Payslips delivered',risks:'',actions:''}]");
+assert.match(run('consolidatedDraft().summary'),/2\/9/);assert.match(run('consolidatedDraft().summary'),/Finance: Closed accounts/);
+assert.match(run('consolidatedDraft().risks'),/Finance: Late payment/);
+assert.match(run('consolidatedDraft().actions'),/Follow up debtors/);
+assert.match(run('consolidatedReportHtml()'),/&lt;script&gt;/);
+run("state.notes[month]={summary:'Approved summary',wayForward:'Approved way forward'}");
+assert.equal(run('managementDraft().summary'),'Approved summary');assert.equal(run('managementDraft().wayForward'),'Approved way forward');
+run("month='2020-01';functionReports=[]");assert.doesNotMatch(run('managementDraft().summary'),/Closed accounts|Approved summary/);
+console.log('PASS: source attribution, missing reports, risks/actions, escaping, manual override and month isolation.');
