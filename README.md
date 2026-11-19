@@ -25,7 +25,7 @@ Run pnpm test and pnpm build before publishing. Edge source is under supabase/fu
 
 ## Monthly scoring
 
-Each function has five equally weighted KPIs, each contributing up to 20 percentage points. The team score averages all nine functions. Unreported and unconfigured KPIs contribute zero to monthly totals; individual entries keep Not reported or Scoring setup required labels. Reporting completion is displayed separately. Scores display up to one decimal place. Existing records are recalculated at display time without rewriting saved actuals or targets.
+Each function has five equally weighted KPIs. Each target met contributes 20 percentage points, and a missed target earns zero credit. Higher-is-better metrics require actual ≥ target, and lower-is-better metrics require actual ≤ target. Function cards show targets achieved (count and percentage) separately from KPIs updated (saved numeric actuals, including zero and missed targets). The team score averages all nine functions. Unreported and unconfigured KPIs contribute zero to monthly totals; individual entries keep Not reported or Scoring setup required labels. Reporting completion is displayed separately. Scores display up to one decimal place. Existing records are recalculated at display time without rewriting saved actuals or targets.
 
 ## Approved 48-hour setup invitations
 
