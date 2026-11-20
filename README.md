@@ -30,3 +30,5 @@ Each function has five equally weighted KPIs. Each target met contributes 20 per
 ## Approved 48-hour setup invitations
 
 Janet and Lawrencia can use individually issued, high-entropy, one-use setup invitations valid for exactly 48 hours from issuance. Only SHA-256 invitation digests are stored in a private, RLS-protected table. A service-only database function atomically checks expiry, use status, the pending-password flag and approved contributor identity before issuing a normal short-lived Auth recovery session. Tokens are consumed only after the member presses Continue, protecting against link previews. Normal Auth email expiry is unchanged. Page JavaScript receives user details only; tokens stay in Secure HttpOnly cookies. After setup the member signs in normally with email and password.
+
+Members can remove their own mistakenly uploaded files or links from an active KPI in their assigned function. A confirmation precedes permanent removal. Database ownership and function-scope policies enforce removal. The backend accepts only single-ID deletion requests and returns IDs only.

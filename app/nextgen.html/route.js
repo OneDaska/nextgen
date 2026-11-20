@@ -1,7 +1,7 @@
 import {dashboardHtml} from '@/lib/dashboard-document.mjs';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
-export function GET(){return new Response(dashboardHtml.replace('/nextgen-app.js','/nextgen-app.js?v=targets-met-20261119'),{headers:{
+export function GET(){return new Response(dashboardHtml.replace('/nextgen-app.js','/nextgen-app.js?v=evidence-remove-20261120'),{headers:{
  'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store',
  'X-Content-Type-Options':'nosniff','X-Frame-Options':'DENY','Referrer-Policy':'no-referrer',
  'Strict-Transport-Security':'max-age=31536000','Permissions-Policy':'camera=(), microphone=(), geolocation=()',
